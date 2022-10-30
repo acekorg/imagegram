@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: imagegramApi
+  description: Imagegram API
+
+paths:
+
+  /posts:
+    get:
+      summary: Get list of all posts
+      operationId: getPosts
+      tags:
+        - post
+      description: Get the list of all posts along with the last 2 comments to each post
+      responses:
+        '200':
+          $ref: '#/components/responses/PostResponse'
+        '500':
+          $ref: '#/components/schemas/Error'
+
+  /post/create:
+    post:
+      summary: Create post
+      operationId: createPost
+      tags:
+        - post
+      description: Create posts with images (1 post - 1 image)
+      responses:
+        '200':
+          $ref: '#/components/responses/CreatePostResponse'
+        '500':
+          $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewPostRequest'
+            encoding:
+              image:
+                contentType: image/png, image/jpeg, image/bmp
+
+  /post/{postId}/addComment:
+    parameters:
+      - $ref: '#/components/parameters/postId'
+    post:
+      summary: Add comment
+      operationId: addComment
+      tags:
+        - comment
+      description: Add comment to a post
+      responses:
+        '200':
+          $ref: '#/components/responses/CommentResponse'
+        '500':
+          $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseComment'
+
+  /post/{postId}/removeComment/{commentId}:
+    parameters:
+      - $ref: '#/components/parameters/postId'
+      - $ref: '#/components/parameters/commentId'
+    post:
+      summary: Remove comment
+      operationId: removeComment
+      tags:
+        - comment
+      description: Remove comment from a post
+      responses:
+        '200':
+          description: Comment removed.
+          content:
+            'application/json': { }
+        '500':
+          $ref: '#/components/schemas/Error'
+
+components:
+  parameters:
+    postId:
+      name: postId
+      in: path
+      description: Id of the post
+      schema:
+        type: string
+        format: uuid
+      required: true
+
+    commentId:
+      name: commentId
+      in: path
+      description: Id of the comment
+      schema:
+        type: string
+        format: uuid
+      required: true
+
+  schemas:
+    PostList:
+      type: object
+      properties:
+        postList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id of the post
+          example: '3fd4e6ab-92fa-4aa5-b81d-7093357e084b'
+        author:
+          type: string
+          description: The user name
+          example: 'user1'
+        textCaption:
+          type: string
+          description: Text caption
+          example: "This is a new post"
+        image:
+          type: string
+          format: byte
+          description: Image byte data
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+
+    NewPostRequest:
+      type: object
+      properties:
+        textCaption:
+          type: string
+          description: Text caption
+          example: "This is a new post"
+        image:
+          type: string
+          format: binary
+          description: Image byte data
+          maxLength: 800000000
+
+    BaseComment:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Comment text
+          example: 'This is a new Comment'
+
+    Comment:
+      allOf:
+        - $ref: '#/components/schemas/BaseComment'
+        - type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id of the comment
+          example: '3fd4e6ab-92fa-4aa5-b81d-7093357e084b'
+        author:
+          type: string
+          description: The user name
+          example: 'user1'
+
+    Error:
+      type: object
+      description: Error details
+      required:
+        - timestamp
+        - message
+        - errorCode
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: When the error/exception happened
+          example: '2021-04-23T09:46:56.0039048+02:00'
+        message:
+          type: string
+          description: Technical error description
+          example: 'Validation error'
+        errorCode:
+          type: string
+          description: The code of the error.
+          example: 'GENERAL_ISSUE'
+
+  responses:
+    PostResponse:
+      description: OK
+      content:
+        application/json; charset=utf-8:
+          schema:
+            $ref: '#/components/schemas/PostList'
+
+    CreatePostResponse:
+      description: OK
+      content:
+        application/json; charset=utf-8:
+          schema:
+            $ref: '#/components/schemas/Post'
+
+    CommentResponse:
+      description: OK
+      content:
+        application/json; charset=utf-8:
+          schema:
+            $ref: '#/components/schemas/Comment'
+

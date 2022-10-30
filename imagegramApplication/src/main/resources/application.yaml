@@ -1,0 +1,12 @@
+spring:
+  mvc:
+    servlet:
+      path: /imagegram
+  application:
+    name: Imagegram
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  servlet:
+    context-path: /api
