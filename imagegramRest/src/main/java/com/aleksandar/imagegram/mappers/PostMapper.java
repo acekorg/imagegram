@@ -5,10 +5,7 @@ import com.aleksandar.imagegram.api.model.Post;
 import com.aleksandar.imagegram.api.model.PostList;
 import com.aleksandar.imagegram.model.CommentModel;
 import com.aleksandar.imagegram.model.PostModel;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +16,11 @@ import java.util.stream.Collectors;
 public final class PostMapper {
 
   /**
+   * Image url pattern for generating image URLs.
+   */
+  private static final String IMAGE_URL_PATTERN = "/api/imagegram/post/%s/image";
+
+  /**
    * Map post business model to REST model.
    *
    * @param postModel post business model.
@@ -26,26 +28,19 @@ public final class PostMapper {
    */
   public static Post mapPostToRestModel(PostModel postModel) {
 
-    Post post = new Post();
-
-    String author = postModel.getAuthor();
-    post.setAuthor(author);
-
     UUID id = postModel.getId();
-    post.setId(id);
+    Post post = new Post()
+        .id(id)
+        .author(postModel.getAuthor())
+        .textCaption(postModel.getTextCaption())
+        .imageUrl(String.format(IMAGE_URL_PATTERN, id));
 
-    String textCaption = postModel.getTextCaption();
-    post.setTextCaption(textCaption);
-
-    byte[] image = postModel.getImage();
-    post.setImage(image);
-
-    ArrayList<CommentModel> commentModels = postModel.getComments();
+    List<CommentModel> commentModels = postModel.getComments();
 
     if (commentModels != null) {
-
       List<Comment> comments =
           commentModels.stream().map(CommentMapper::mapCommentToRestModel).collect(Collectors.toList());
+
       post.setComments(comments);
     }
 

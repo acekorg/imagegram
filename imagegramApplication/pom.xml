@@ -21,6 +21,10 @@
             <artifactId>imagegramCore</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.aleksandar</groupId>
+            <artifactId>imagegramPersistence</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

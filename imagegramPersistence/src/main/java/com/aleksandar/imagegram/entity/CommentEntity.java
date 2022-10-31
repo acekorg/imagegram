@@ -1,22 +1,24 @@
-package com.aleksandar.imagegram.model;
+package com.aleksandar.imagegram.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * Business model for comments.
+ * Comment entity.
  */
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-public class CommentModel {
+public class CommentEntity {
 
   private UUID id;
   private String author;
   private String text;
+  private OffsetDateTime offsetDateTime;
+  private UUID postId;
+
 }

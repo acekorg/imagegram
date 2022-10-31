@@ -29,7 +29,7 @@ public final class ImageProcessor {
           new BufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
       Graphics2D graphics = processedImage.createGraphics();
-      graphics.drawImage(bufferedImage, 0, 0, Color.WHITE,null);
+      graphics.drawImage(bufferedImage, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, Color.WHITE,null);
 
       ByteArrayOutputStream imageOutputStream = new ByteArrayOutputStream();
       ImageIO.write(processedImage, IMAGE_FORMAT, imageOutputStream);

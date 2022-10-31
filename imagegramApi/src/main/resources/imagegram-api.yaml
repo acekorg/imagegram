@@ -40,6 +40,22 @@ paths:
               image:
                 contentType: image/png, image/jpeg, image/bmp
 
+  /post/{postId}/image:
+    parameters:
+      - $ref: '#/components/parameters/postId'
+    get:
+      summary: Get post image
+      operationId: getPostImage
+      tags:
+        - post
+      description: Get post image
+      responses:
+        '200':
+          $ref: '#/components/responses/ImageResponse'
+        '500':
+          $ref: '#/components/schemas/Error'
+
+
   /post/{postId}/addComment:
     parameters:
       - $ref: '#/components/parameters/postId'
@@ -58,11 +74,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BaseComment'
+              $ref: '#/components/schemas/NewCommentRequest'
 
   /post/{postId}/removeComment/{commentId}:
     parameters:
-      - $ref: '#/components/parameters/postId'
       - $ref: '#/components/parameters/commentId'
     post:
       summary: Remove comment
@@ -122,11 +137,11 @@ components:
         textCaption:
           type: string
           description: Text caption
-          example: "This is a new post"
-        image:
+          example: 'This is a new post'
+        imageUrl:
           type: string
-          format: byte
-          description: Image byte data
+          description: Image URL
+          example: '/api/imagegram/post/a23453f3aa3-safsf2124/image'
         comments:
           type: array
           items:
@@ -145,17 +160,8 @@ components:
           description: Image byte data
           maxLength: 800000000
 
-    BaseComment:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Comment text
-          example: 'This is a new Comment'
-
     Comment:
       allOf:
-        - $ref: '#/components/schemas/BaseComment'
         - type: object
       properties:
         id:
@@ -163,10 +169,22 @@ components:
           format: uuid
           description: Id of the comment
           example: '3fd4e6ab-92fa-4aa5-b81d-7093357e084b'
+        text:
+          type: string
+          description: Comment text
+          example: 'This is a new Comment'
         author:
           type: string
           description: The user name
           example: 'user1'
+
+    NewCommentRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Comment text
+          example: 'This is a new Comment'
 
     Error:
       type: object
@@ -185,10 +203,6 @@ components:
           type: string
           description: Technical error description
           example: 'Validation error'
-        errorCode:
-          type: string
-          description: The code of the error.
-          example: 'GENERAL_ISSUE'
 
   responses:
     PostResponse:
@@ -212,3 +226,10 @@ components:
           schema:
             $ref: '#/components/schemas/Comment'
 
+    ImageResponse:
+      description: OK
+      content:
+        image/jpeg:
+          schema:
+            type: string
+            format: binary

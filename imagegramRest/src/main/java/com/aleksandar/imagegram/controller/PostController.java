@@ -7,19 +7,23 @@ import com.aleksandar.imagegram.mappers.PostMapper;
 import com.aleksandar.imagegram.model.PostModel;
 import com.aleksandar.imagegram.service.PostService;
 import com.aleksandar.imagegram.utils.AuthenticationUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 public class PostController implements PostApi {
 
-  @Autowired
-  private PostService postService;
+  private final PostService postService;
 
   @Override
   public ResponseEntity<PostList> getPosts() {
@@ -35,12 +39,20 @@ public class PostController implements PostApi {
       byte[] imageData = image.getBytes();
       String loggedInUser = AuthenticationUtils.getLoggedInUser();
       PostModel postModel = new PostModel(loggedInUser, textCaption, imageData);
-      PostModel post = postService.createPost(postModel);
-      // TODO: 29.10.22 Do we need to return Post model ?
-      return ResponseEntity.ok(new Post());
+      PostModel savedPost = postService.createPost(postModel);
+
+      Post post = PostMapper.mapPostToRestModel(savedPost);
+      return ResponseEntity.ok(post);
 
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public ResponseEntity<Resource> getPostImage(UUID postId) {
+    byte[] postImage = postService.getPostImage(postId);
+    ByteArrayResource imageResource = new ByteArrayResource(postImage);
+    return ResponseEntity.ok(imageResource);
   }
 }
