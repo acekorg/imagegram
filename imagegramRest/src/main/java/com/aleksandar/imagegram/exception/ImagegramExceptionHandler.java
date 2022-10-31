@@ -12,16 +12,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.OffsetDateTime;
 
+/**
+ * Global exception handler.
+ * Logs the exception and returns to the user nice json response that states that error has occured.
+ * Example:
+ *    {
+ *     "timestamp": "2022-10-31T17:44:23.889898+01:00",
+ *     "message": "An error has occurred."
+ *    }
+ */
 @ControllerAdvice
 public class ImagegramExceptionHandler {
 
   Logger logger = LoggerFactory.getLogger(ImagegramExceptionHandler.class);
 
+  /**
+   * Handle all runtime errors.
+   * Log the exception and return error message.
+   */
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<Error> handleImagegramException(RuntimeException exception) {
 
-    logger.error(exception.getMessage());
-    exception.printStackTrace();
+    logger.error("An error has occured", exception);
 
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(MediaType.APPLICATION_PROBLEM_JSON);

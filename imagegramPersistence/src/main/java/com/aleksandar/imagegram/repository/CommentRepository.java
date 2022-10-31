@@ -55,7 +55,7 @@ public class CommentRepository {
             .stream()
             .filter(entry -> entry.getValue().getPostId().equals(postId))
             .map(entry -> entry.getValue())
-            .sorted(Comparator.comparing(CommentEntity::getOffsetDateTime).reversed())
+            .sorted(Comparator.comparing(CommentEntity::getTimestamp).reversed())
             .limit(2)
             .collect(Collectors.toList());
 

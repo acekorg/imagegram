@@ -28,9 +28,13 @@ public class CommentService {
    * @return The stored comment model with the new ID.
    */
   public CommentModel addComment(UUID postId, CommentModel commentModel) {
+
     CommentEntity commentEntity = CommentBusinessMapper.convertCommentBusinessModelToEntity(commentModel);
+
+    String loggedInUser = AuthenticationUtils.getLoggedInUser();
+    commentModel.setAuthor(loggedInUser);
     commentEntity.setPostId(postId);
-    commentEntity.setOffsetDateTime(OffsetDateTime.now());
+    commentEntity.setTimestamp(OffsetDateTime.now());
 
     CommentEntity savedCommentEntity = commentRepository.addComment(commentEntity);
     CommentModel savedCommentModel = CommentBusinessMapper.convertCommentEntityToBusinessModel(savedCommentEntity);

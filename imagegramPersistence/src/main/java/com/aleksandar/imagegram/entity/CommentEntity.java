@@ -18,7 +18,7 @@ public class CommentEntity {
   private UUID id;
   private String author;
   private String text;
-  private OffsetDateTime offsetDateTime;
+  private OffsetDateTime timestamp;
   private UUID postId;
 
 }

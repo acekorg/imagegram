@@ -55,7 +55,6 @@ paths:
         '500':
           $ref: '#/components/schemas/Error'
 
-
   /post/{postId}/addComment:
     parameters:
       - $ref: '#/components/parameters/postId'
@@ -158,7 +157,6 @@ components:
           type: string
           format: binary
           description: Image byte data
-          maxLength: 800000000
 
     Comment:
       allOf:

@@ -26,33 +26,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-
-        InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
-
-        UserDetails user1 = User
-                .withUsername("user1")
-                .password("{noop}password")
-                .roles("USER")
-                .build();
-        inMemoryUserDetailsManager.createUser(user1);
-
-        UserDetails user2 = User
-                .withUsername("user2")
-                .password("{noop}password")
-                .roles("USER")
-                .build();
-        inMemoryUserDetailsManager.createUser(user2);
-
-        UserDetails user3 = User
-                .withUsername("user3")
-                .password("{noop}password")
-                .roles("USER")
-                .build();
-        inMemoryUserDetailsManager.createUser(user3);
-
-        return inMemoryUserDetailsManager;
-    }
 }
