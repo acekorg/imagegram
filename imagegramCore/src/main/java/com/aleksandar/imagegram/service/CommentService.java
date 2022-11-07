@@ -32,7 +32,7 @@ public class CommentService {
     CommentEntity commentEntity = CommentBusinessMapper.convertCommentBusinessModelToEntity(commentModel);
 
     String loggedInUser = AuthenticationUtils.getLoggedInUser();
-    commentModel.setAuthor(loggedInUser);
+    commentEntity.setAuthor(loggedInUser);
     commentEntity.setPostId(postId);
     commentEntity.setTimestamp(OffsetDateTime.now());
 
