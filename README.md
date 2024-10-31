@@ -13,7 +13,7 @@ Design and implementation by Aleksandar
 
 Heroku:
 There is `system.properties` and `Procfile` for deployment on Heroku.\
-Currently available at: https://aleksandarimageg.herokuapp.com/api/imagegram/posts \
+[OUTDATED] Currently available at: https://aleksandarimageg.herokuapp.com/api/imagegram/posts \
 Users | Passwords: \
 user1 | password \
 user2 | password \
